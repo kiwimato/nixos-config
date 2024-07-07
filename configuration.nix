@@ -4,12 +4,6 @@
 
 { config, pkgs, lib, ... }:
 let
-#  tuxedo = import (builtins.fetchTarball "https://github.com/blitz/tuxedo-nixos/archive/master.tar.gz");
-#  tuxedo = import "/home/mihai/tuxedo-nixos";
-#      pkgs = import (builtins.fetchTarball {
-#        url = "https://github.com/NixOS/nixpkgs/archive/9957cd48326fe8dbd52fdc50dd2502307f188b0d.tar.gz";
-#    }) {};
-
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
       "vivaldi"
       "vivaldi-6.2"
@@ -22,11 +16,7 @@ in
     #  <nixos-hardware/system76/default.nix>
       ./hardware-configuration.nix
       ./falcon-sensor.nix
-#      tuxedo.module
     ];
-  # Tuxedo
-#  hardware.tuxedo-control-center.enable = true;
- # hardware.tuxedo-control-center.package = tuxedo-nixos.packages.x86_64-linux.default;
   boot.supportedFilesystems = [ "ntfs" ];
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -55,15 +45,9 @@ in
         "fs.aio-max-nr" = 1048576;
   };
   # latest kernel
-  #  boot.kernelPackages = pkgs.linuxPackages_latest;
   nixpkgs.config.allowUnfree = true;
 
   networking.hostName = "nixos"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Enable networking
   networking.networkmanager.enable = true;
@@ -120,24 +104,18 @@ in
 
   # Enable sound with pipewire.
   sound.enable = false;
-  #hardware.pulseaudio.enable = true;
-  #hardware.pulseaudio.support32Bit = true;  
   hardware.pulseaudio.enable = false;
- # virtualisation.libvirtd.enable = true;
   
  # virtualisation.libvirtd.qemu.swtpm.enable = true;
-virtualisation.libvirtd = {
-  enable = true;
-
-  onShutdown = "suspend";
-  onBoot = "ignore";
-
-  qemu = {
-    package = pkgs.qemu_kvm;
-    ovmf.enable = true;
-    ovmf.packages = [ pkgs.OVMFFull.fd ];
-    swtpm.enable = true;
-#    runAsRoot = false;
+  virtualisation.libvirtd = {
+    enable = true;
+    onShutdown = "suspend";
+    onBoot = "ignore";
+    qemu = {
+      package = pkgs.qemu_kvm;
+      ovmf.enable = true;
+      ovmf.packages = [ pkgs.OVMFFull.fd ];
+      swtpm.enable = true;
   };
 };
   services.spice-vdagentd.enable = true;
@@ -147,13 +125,13 @@ virtualisation.libvirtd = {
   programs.dconf.enable = true; # virt-manager requires dconf to remember settings
   hardware.bluetooth.enable = true;
 
-	  # Nix garbage collector settings.
+   # Nix garbage collector settings.
    nix = {
-    gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than-14d";
-    };
+     gc = {
+       automatic = true;
+       dates = "weekly";
+       options = "--delete-older-than-14d";
+     };
     optimise.automatic = true;
     settings = {
       auto-optimise-store = true;
@@ -161,10 +139,10 @@ virtualisation.libvirtd = {
   };
 
 
-#  hardware.tuxedo-rs = {
-#    enable = true;
-#    tailor-gui.enable = true;
-#  };
+  #  hardware.tuxedo-rs = {
+  #    enable = true;
+  #    tailor-gui.enable = true;
+  #  };
   hardware.tuxedo-keyboard.enable = true;
 
   #hardware.bluetooth.hsphfpd.enable = true;
@@ -272,19 +250,18 @@ virtualisation.libvirtd = {
     OVMFFull
     OVMF
     #_1password
-    #falcon-sensor
-          gst_all_1.gstreamer
-          # Common plugins like "filesrc" to combine within e.g. gst-launch
-          gst_all_1.gst-plugins-base
-          # Specialized plugins separated by quality
-          gst_all_1.gst-plugins-good
-          gst_all_1.gst-plugins-bad
-          gst_all_1.gst-plugins-ugly
-#          gst_all_1.gst-plugins-pipewire
-          # Plugins to reuse ffmpeg to play almost every video format
-          gst_all_1.gst-libav
-          # Support the Video Audio (Hardware) Acceleration API
-          gst_all_1.gst-vaapi
+    gst_all_1.gstreamer
+    # Common plugins like "filesrc" to combine within e.g. gst-launch
+    gst_all_1.gst-plugins-base
+    # Specialized plugins separated by quality
+    gst_all_1.gst-plugins-good
+    gst_all_1.gst-plugins-bad
+    gst_all_1.gst-plugins-ugly
+#   gst_all_1.gst-plugins-pipewire
+    # Plugins to reuse ffmpeg to play almost every video format
+    gst_all_1.gst-libav
+    # Support the Video Audio (Hardware) Acceleration API
+    gst_all_1.gst-vaapi
  
     (vivaldi.override {
       proprietaryCodecs = true;
@@ -293,9 +270,7 @@ virtualisation.libvirtd = {
     vivaldi-ffmpeg-codecs
     widevine-cdm
   ];
-#  virtualisation.vmware.host.enable = true;
 
-  #boot.kernelParams = [ "transparent_hugepage=never" "iommu=pt" "preempt=voluntary" "amd_iommu=on" "hugepagesz=1G" "hugepages=8"];
   boot.kernelParams = [ 
     "transparent_hugepage=never"
     "hugepagesz=1G"
@@ -311,7 +286,7 @@ virtualisation.libvirtd = {
      enable = true;
      enableSSHSupport = true;
    };
-   programs.partition-manager.enable = true;
+  programs.partition-manager.enable = true;
   nix.settings.trusted-users = [ "root" "@wheel" "@mihai" ];
   # List services that you want to enable:
 
