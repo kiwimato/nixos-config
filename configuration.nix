@@ -13,7 +13,7 @@ in
 {
   imports =
     [ # Include the results of the hardware scan.
-    #  <nixos-hardware/system76/default.nix>
+   #   <nixos-hardware/system76/default.nix>
       ./hardware-configuration.nix
       ./falcon-sensor.nix
     ];
@@ -83,6 +83,7 @@ in
   xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
   hardware.nvidia.modesetting.enable = true;
   hardware.nvidia.powerManagement.enable = true;
+  hardware.system76.enableAll = true;
 
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.graphics.enable = true;
@@ -130,7 +131,7 @@ in
      gc = {
        automatic = true;
        dates = "weekly";
-       options = "--delete-older-than-14d";
+       options = "--delete-older-than 120d";
      };
     optimise.automatic = true;
     settings = {
